@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException, Depends
 from sqlalchemy.orm import Session
 from app.db import SessionLocal
-from app.models.lake import Lake
+from app.models.waterObject import WaterObject
 from app.schemas.lake import LakeCreate
 
 router = APIRouter()
@@ -15,7 +15,7 @@ def get_db():
 
 @router.get("/lakes")
 def read_lakes(db: Session = Depends(get_db)):
-    return db.query(Lake).all()
+    return db.query(WaterObject).all()
 
 @router.post("/import")
 def import_lakes(lakes: list[LakeCreate]):
@@ -23,7 +23,7 @@ def import_lakes(lakes: list[LakeCreate]):
 
     lake_objects = []
     for lake_data in lakes:
-        lake_obj = Lake(**lake_data.dict())
+        lake_obj = WaterObject(**lake_data.dict())
         lake_objects.append(lake_obj)
 
     db.add_all(lake_objects)
