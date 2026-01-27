@@ -36,10 +36,7 @@ def get_admin_token(username: str = Body(...), password: str = Body(...)):
     if username != ADMIN_USERNAME or not pwd_context.verify(password, ADMIN_PASSWORD_HASH):
         raise HTTPException(status_code=401, detail="Incorrect credentials")
 
-    token = create_access_token(
-        {"sub": "admin"},
-        expires_delta=timedelta(hours=1)
-    )
+    token = create_access_token({"sub": "admin"}, expires_delta=timedelta(hours=1))
     return {"access_token": token, "token_type": "bearer"}
 
 # ===== Public =====
