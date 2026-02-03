@@ -13,24 +13,31 @@ router = APIRouter(
     tags=["Water Objects"]
 )
 
+# ------------------------
+# Получить все озёра
+# ------------------------
 @router.get("")
 def get_all_lakes(
-    current_user=Depends(get_current_user),
+    # current_user=Depends(get_current_user),  # временно закомментировали
     db: Session = Depends(get_db)
 ):
-    if current_user.get("sub") != "admin":
-        raise HTTPException(status_code=403, detail="Forbidden")
+    # Проверка на admin пока не нужна
+    # if current_user.get("sub") != "admin":
+    #     raise HTTPException(status_code=403, detail="Forbidden")
 
     return db.query(WaterObject).all()
 
+# ------------------------
+# Поиск озёр
+# ------------------------
 @router.get("/search")
 def search_lakes(
     q: str = Query(..., min_length=2),
-    current_user=Depends(get_current_user),
+    # current_user=Depends(get_current_user),  # закомментировали
     db: Session = Depends(get_db)
 ):
-    if current_user.get("sub") != "admin":
-        raise HTTPException(status_code=403, detail="Forbidden")
+    # if current_user.get("sub") != "admin":
+    #     raise HTTPException(status_code=403, detail="Forbidden")
 
     return (
         db.query(WaterObject)
@@ -93,8 +100,9 @@ def water_object_details(
         "water_quality": quality
     }
 
-
-
+# ------------------------
+# Добавление показателей воды
+# ------------------------
 @router.post("/{water_object_id}/quality")
 def add_water_quality(
     water_object_id: int,
