@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, ForeignKey, DateTime
+from sqlalchemy import Column, Integer, Float, ForeignKey, DateTime
 from sqlalchemy.sql import func
 from app.db import Base
 
@@ -16,7 +16,7 @@ class WaterQuality(Base):
     W = Column(Integer)
     T = Column(Integer)
     Tw = Column(Integer)
-    pH = Column(Integer)
+    pH = Column(Float)
     O = Column(Integer)
     I = Column(Integer)
     M = Column(Integer)
