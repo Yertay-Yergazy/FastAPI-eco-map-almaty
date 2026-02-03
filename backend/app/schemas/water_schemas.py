@@ -4,6 +4,9 @@ from typing import Optional, Union
 class LakeCreate(BaseModel):
     name: str
     region: str
+    latitude: Optional[float] = None
+    longitude: Optional[float] = None
+    description: Optional[str] = None
     Z: Optional[int]
     H: Optional[int]
     G: Optional[int]
@@ -23,7 +26,6 @@ class LakeCreate(BaseModel):
     Tr: Optional[int]
     Fl: Optional[int]
     Fa: Optional[int]
-
 
 class QualityFilter(BaseModel):
     Z: Optional[Union[int, list]] = None

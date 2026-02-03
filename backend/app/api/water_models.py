@@ -64,7 +64,7 @@ def search_by_quality(
 
 
 
-@router.get("/{id}")
+@router.get("/{water_object_id}")
 def water_object_details(
     water_object_id: int,
     db: Session = Depends(get_db)
@@ -87,6 +87,9 @@ def water_object_details(
         "id": water_object.id,
         "name": water_object.name,
         "region": water_object.region,
+        "latitude": water_object.latitude,
+        "longitude": water_object.longitude,
+        "description": water_object.description,
         "water_quality": quality
     }
 
