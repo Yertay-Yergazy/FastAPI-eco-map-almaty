@@ -16,16 +16,26 @@ router = APIRouter(
 # ------------------------
 # Получить все озёра
 # ------------------------
-@router.get("")
-def get_all_lakes(
-    # current_user=Depends(get_current_user),  # временно закомментировали
-    db: Session = Depends(get_db)
-):
-    # Проверка на admin пока не нужна
-    # if current_user.get("sub") != "admin":
-    #     raise HTTPException(status_code=403, detail="Forbidden")
+from sqlalchemy import text
+from fastapi import Depends
+from sqlalchemy.orm import Session
 
-    return db.query(WaterObject).all()
+
+@router.get("")
+def get_all_lakes(db: Session = Depends(get_db)):
+    sql = text("""
+        SELECT 
+            wo.id, wo.name, wo.region, wo.latitude, wo.longitude, wq."Z"
+        FROM water_objects wo
+        LEFT JOIN LATERAL (
+            SELECT "Z" FROM water_quality 
+            WHERE water_object_id = wo.id 
+            ORDER BY created_at DESC 
+            LIMIT 1
+        ) wq ON true
+        ORDER BY wo.id;
+    """)
+    return db.execute(sql).mappings().all()
 
 # ------------------------
 # Поиск озёр
@@ -48,12 +58,8 @@ def search_lakes(
 @router.post("/search-by-quality")
 def search_by_quality(
     filter: QualityFilter,
-    current_user=Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
-    if current_user.get("sub") != "admin":
-        raise HTTPException(status_code=403, detail="Forbidden")
-    
     # Начинаем с базовой таблицы WaterObject и присоединяем качество воды
     query = db.query(WaterObject).join(WaterQuality)
     
