@@ -5,3 +5,9 @@ venv/
 .env
 
 .vscode/
+
+# Firebase credentials (НИКОГДА не коммитить!)
+firebase-credentials.json
+
+# Python cache
+*.pyc
